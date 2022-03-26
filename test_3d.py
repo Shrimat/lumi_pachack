@@ -16,8 +16,10 @@ def plot_data(data1, data2, data3):
 		y=data1[:, 1],
 		z=data1[:, 2],
 		mode='lines',
+		name = "Envisat",
 		line = dict(
 			#size=size,
+			color = "orange",
 			colorscale='Viridis',
 		)
 	),go.Scatter3d(
@@ -25,16 +27,20 @@ def plot_data(data1, data2, data3):
 		y=data2[:, 1],
 		z=data2[:, 2],
 		mode='lines',
+		name = "Globalstar",
 		line = dict(
 			#size=size,
+			color = "green",
 			colorscale='Viridis'))
 	,go.Scatter3d(
 		x=data3[:, 0],
 		y=data3[:, 1],
 		z=data3[:, 2],
 		mode='markers',
+		name = "Earth",
 		marker = dict(
 			size=20,
+			color = "blue",
 			colorscale='Viridis'))])
 	# fig = px.scatter_3d(df, x='x', y='y', z='z', opacity = 0.5, size_max = 5)
 
