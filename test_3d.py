@@ -5,8 +5,9 @@ import numpy as np
 import plotly.graph_objects as go
 from load_data import load
 
+
 def plot_data(data1, data2, data3):
-    Re=6371000
+    Re = 6371000
     axisScale = 2
     fig = go.Figure(
         data=[
@@ -40,14 +41,14 @@ def plot_data(data1, data2, data3):
                     colorscale='Viridis'))],
 
         layout=go.Layout(
-            
-        title="Start Title",
-        hovermode="closest",
-        updatemenus=[dict(
-            type="buttons",
-            buttons=[dict(label="Play",
-                          method="animate",
-                          args=[None])
+
+            title="Start Title",
+            hovermode="closest",
+            updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                              method="animate",
+                              args=[None, {"frame": {"duration": 5}, "transition": {"duration": 5}}])
                          ])]),
 
         frames=[go.Frame(
@@ -65,22 +66,22 @@ def plot_data(data1, data2, data3):
                     mode="markers",
                     marker=dict(color="green", size=2))
 
-            ])for k in range(len(data1))])
+            ],
+            layout={
+                "xaxis": {"range": [-axisScale * Re, axisScale * Re]},
+                "yaxis": {"range": [-axisScale * Re, axisScale * Re]},
+            }
+            )for k in range(len(data1))])
 
-    # fig.update_layout(
-    #     scene=dict(
-    #         xaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False, visible = False),
-    #         yaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False, visible = False),
-    #         zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False, visible = False),),
-    #     )
     fig.update_layout(
+        paper_bgcolor="black",
         scene=dict(
-            xaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),
-            yaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),
+            xaxis=dict(nticks=4, range=[-axisScale *
+                       Re, axisScale * Re], autorange=False),
+            yaxis=dict(nticks=4, range=[-axisScale *
+                       Re, axisScale * Re], autorange=False),
             zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),),
-        )
-        
-    fig.update_layout(paper_bgcolor="black")
+    )
 
     app = Dash(__name__)
 
