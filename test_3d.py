@@ -15,6 +15,8 @@ COLOR_SCALE = [[0.0, 'rgb(30, 59, 117)'],
               [0.9, 'rgb(237,214,183)'],
               [1.0, 'rgb(255, 255, 255)']]
 
+AXIS_SCALE = 2
+
 
 def plot_data(data1, data2):
     texture = np.asarray(Image.open('earth.jpg')).T
@@ -40,40 +42,7 @@ def plot_data(data1, data2):
             # size=size,
             color="green",
             colorscale='Viridis'))
-        , trace])
-def plot_data(data1, data2, data3):
-    Re = 6371000
-    axisScale = 2
-    fig = go.Figure(
-        data=[
-            go.Scatter3d(
-                x=data1[:, 0],
-                y=data1[:, 1],
-                z=data1[:, 2],
-                mode='lines',
-                name="Envisat",
-                line=dict(
-                    color="orange",
-                    colorscale='Viridis')),
-            go.Scatter3d(
-                x=data2[:, 0],
-                y=data2[:, 1],
-                z=data2[:, 2],
-                mode='lines',
-                name="Globalstar",
-                line=dict(
-                    color="green",
-                    colorscale='Viridis')),
-            go.Scatter3d(
-                x=data3[:, 0],
-                y=data3[:, 1],
-                z=data3[:, 2],
-                mode='markers',
-                name="Earth",
-                marker=dict(
-                    size=20,
-                    color="blue",
-                    colorscale='Viridis'))],
+        , trace],
 
         layout=go.Layout(
             title="Start Title",
@@ -106,11 +75,11 @@ def plot_data(data1, data2, data3):
     fig.update_layout(
         paper_bgcolor="black",
         scene=dict(
-            xaxis=dict(nticks=4, range=[-axisScale *
-                       Re, axisScale * Re], autorange=False),
-            yaxis=dict(nticks=4, range=[-axisScale *
-                       Re, axisScale * Re], autorange=False),
-            zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),
+            xaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
+            yaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
+            zaxis=dict(nticks=4, range=[-AXIS_SCALE * EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
             aspectratio=dict(x=1, y=1, z=1)),
     )
 
