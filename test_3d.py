@@ -1,34 +1,25 @@
 from dash import Dash, html, dcc
-import plotly.express as px
-import pandas as pd
-import numpy as np
-
-df = px.data.iris()
-
-df_numpy = np.array([[0., 0., 0.], [1., 1., 1.]])
-df = pd.DataFrame(df_numpy, columns = ['x','y',"z"])
+import plotly.graph_objects as go
+from load_data import load
+from earth_plot import earth_plot
+from app import app
 
 def plot_data(df):
-	fig = px.scatter_3d(df, x='x', y='y', z='z')
+    #fig = px.scatter_3d(df, x='x', y='y', z='z')
+    fig = go.Figure(data=[earth_plot(20, 5)])
 
-	app = Dash(__name__)
+    app.layout = html.Div(children=[
+        html.H1(children='Hello Dash'),
 
-
-	app.layout = html.Div(children=[
-		html.H1(children='Hello Dash'),
-
-		html.Div(children='''
+        html.Div(children='''
 			Dash: A web application framework for your data.
 		'''),
 
-		dcc.Graph(
-			id='example-graph',
-			figure=fig
-		)
-	])
-
-	app.run_server(debug=True)
+        dcc.Graph(
+            id='example-graph',
+            figure=fig
+        )
+    ])
 
 if __name__ == '__main__':
-	plot_data(df)
-	
+    plot_data(load("envisat"))

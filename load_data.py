@@ -1,10 +1,6 @@
 import numpy as np
 import json
-import glob
-from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
-from test_3d import plot_data
 
 
 def load(satellite):
@@ -12,7 +8,7 @@ def load(satellite):
 	data_path = "data/"
 
 	# path to Envisat orbital data.
-	envisat_orbit_path = f'data/{satellite}_state.json'
+	envisat_orbit_path = f'Lumi Space/data/{satellite}_state.json'
 
 	# load the data from file into orbit dictionary
 	with open(envisat_orbit_path, 'r') as f:
@@ -26,6 +22,3 @@ def load(satellite):
 	df = pd.DataFrame(pos, columns = ['x','y',"z"])
 	
 	return df
-
-if __name__ == "__main__":
-	plot_data(load("envisat"))
