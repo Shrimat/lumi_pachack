@@ -1,11 +1,10 @@
 from dash import Dash, html, dcc
 from test_3d import plot_data
 from load_data import load
-import numpy as np
 
 app = Dash(__name__)
 
-fig = plot_data(load("envisat"), load("globalstar"), np.array([[0., 0., 0.]]))
+fig = plot_data(load("envisat"), load("globalstar"))
 
 app.layout = html.Div(children=[
     html.H1(children='Lumi Satellite Orbital Data'),
