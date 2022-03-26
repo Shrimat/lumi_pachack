@@ -18,7 +18,7 @@ def plot_data(data1, data2, data3):
                 mode='lines',
                 name="Envisat",
                 line=dict(
-                    color="orange",
+                    color="red",
                     colorscale='Viridis')),
             go.Scatter3d(
                 x=data2[:, 0],
@@ -45,18 +45,19 @@ def plot_data(data1, data2, data3):
                 z=[data1[0, 2]],
                 mode="markers",
                 name="Envisat",
-                marker=dict(color="red", size=2)),
+                marker=dict(color="red", size=2),
+                showlegend=False),
             go.Scatter3d(
                 x=[data2[0, 0]],
                 y=[data2[0, 1]],
                 z=[data2[0, 2]],
                 mode="markers",
                 name="Globalstar",
-                marker=dict(color="green", size=2))],
+                marker=dict(color="green", size=2),
+                showlegend=False)],
 
         layout=go.Layout(
-
-            title="Start Title",
+            title="Satellite Information",
             hovermode="closest",
             updatemenus=[dict(
                 type="buttons",
@@ -73,12 +74,14 @@ def plot_data(data1, data2, data3):
                     y=data1[max(k-100, 0):k+1, 1],
                     z=data1[max(k-100, 0):k+1, 2],
                     mode="lines",
+                    name="Envisat",
                     line=dict(color="red", colorscale='Viridis')),
                 go.Scatter3d(
                     x=data2[max(k-100, 0):k+1, 0],
                     y=data2[max(k-100, 0):k+1, 1],
                     z=data2[max(k-100, 0):k+1, 2],
                     mode="lines",
+                    name="Globalstar",
                     line=dict(color="green", colorscale='Viridis')),
                 go.Scatter3d(
                     x=[data3[0, 0]],
@@ -93,19 +96,21 @@ def plot_data(data1, data2, data3):
                     z=[data1[k, 2]],
                     mode="markers",
                     name="Envisat",
-                    marker=dict(color="red", size=2)),
+                    marker=dict(color="red", size=2),
+                    showlegend=False),
                 go.Scatter3d(
                     x=[data2[k, 0]],
                     y=[data2[k, 1]],
                     z=[data2[k, 2]],
                     mode="markers",
                     name="Globalstar",
-                    marker=dict(color="green", size=2)),
+                    marker=dict(color="green", size=2),
+                    showlegend=False),
             ],
-            layout={
-                "xaxis": {"range": [-axisScale * Re, axisScale * Re]},
-                "yaxis": {"range": [-axisScale * Re, axisScale * Re]}
-            }
+            layout=go.Layout(
+                title="Satellite Information",
+                hovermode="closest",
+                uirevision="anything"),
             )for k in range(len(data1))])
 
     fig.update_layout(
