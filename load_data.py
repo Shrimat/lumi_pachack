@@ -4,9 +4,6 @@ import pandas as pd
 
 
 def load(satellite):
-	# Location of the data on disk
-	data_path = "data/"
-
 	# path to Envisat orbital data.
 	envisat_orbit_path = f'Lumi Space/data/{satellite}_state.json'
 
@@ -18,7 +15,5 @@ def load(satellite):
 	for key in orbit.keys():
 		orbit[key] = np.array(orbit[key])
 
-	pos = orbit['pos'][0::100]
-	df = pd.DataFrame(pos, columns = ['x','y',"z"])
-	
-	return df
+	pos = orbit['pos'][0::50]
+	return pos
