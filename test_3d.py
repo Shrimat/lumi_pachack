@@ -41,7 +41,6 @@ def plot_data(data1, data2, data3):
                     colorscale='Viridis'))],
 
         layout=go.Layout(
-
             title="Start Title",
             hovermode="closest",
             updatemenus=[dict(
@@ -66,11 +65,7 @@ def plot_data(data1, data2, data3):
                     mode="markers",
                     marker=dict(color="green", size=2))
 
-            ],
-            layout={
-                "xaxis": {"range": [-axisScale * Re, axisScale * Re]},
-                "yaxis": {"range": [-axisScale * Re, axisScale * Re]},
-            }
+            ]
             )for k in range(len(data1))])
 
     fig.update_layout(
@@ -80,7 +75,8 @@ def plot_data(data1, data2, data3):
                        Re, axisScale * Re], autorange=False),
             yaxis=dict(nticks=4, range=[-axisScale *
                        Re, axisScale * Re], autorange=False),
-            zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),),
+            zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),
+            aspectratio=dict(x=1, y=1, z=1)),
     )
 
     app = Dash(__name__)
