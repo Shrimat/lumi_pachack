@@ -4,7 +4,6 @@ import glob
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
-from test_3d import plot_data
 
 
 def load(satellite):
@@ -22,10 +21,10 @@ def load(satellite):
 	for key in orbit.keys():
 		orbit[key] = np.array(orbit[key])
 
-	pos = orbit['pos'][0::100]
-	df = pd.DataFrame(pos, columns = ['x','y',"z"])
-	
-	return df
+	pos = orbit['pos'][0::50]
+	return pos
+	# df = pd.DataFrame(pos, columns = ['x','y',"z"])
+	# return df
 
 if __name__ == "__main__":
 	plot_data(load("envisat"))
