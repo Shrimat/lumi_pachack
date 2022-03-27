@@ -45,10 +45,22 @@ def plot_data(data1, data2, data3):
             hovermode="closest",
             updatemenus=[dict(
                 type="buttons",
-                buttons=[dict(label="Play",
-                              method="animate",
-                              args=[None, {"frame": {"duration": 5}, "transition": {"duration": 5}}])
-                         ])]),
+                buttons=[
+                    {
+                        "args": [None, {"frame": {"duration": 5},
+                                        "fromcurrent": True, "transition": {"duration": 5,
+                                                                            "easing": "quadratic-in-out"}}],
+                        "label": "Play",
+                        "method": "animate"
+                    },
+                    {
+                        "args": [[None], {"frame": {"duration": 0},
+                                          "mode": "immediate",
+                                          "transition": {"duration": 0}}],
+                        "label": "Pause",
+                        "method": "animate"
+                    }
+                ])]),
 
         frames=[go.Frame(
             data=[
@@ -66,7 +78,7 @@ def plot_data(data1, data2, data3):
                     marker=dict(color="green", size=2))
 
             ]
-            )for k in range(len(data1))])
+        )for k in range(len(data1))])
 
     fig.update_layout(
         paper_bgcolor="black",
@@ -75,7 +87,8 @@ def plot_data(data1, data2, data3):
                        Re, axisScale * Re], autorange=False),
             yaxis=dict(nticks=4, range=[-axisScale *
                        Re, axisScale * Re], autorange=False),
-            zaxis=dict(nticks=4, range=[-axisScale * Re, axisScale * Re], autorange=False),
+            zaxis=dict(nticks=4, range=[-axisScale *
+                       Re, axisScale * Re], autorange=False),
             aspectratio=dict(x=1, y=1, z=1)),
     )
 
