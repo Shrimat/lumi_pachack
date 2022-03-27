@@ -68,11 +68,22 @@ def plot_data(data1, data2):
             hovermode="closest",
             updatemenus=[dict(
                 type="buttons",
-                buttons=[dict(label="Play",
-                              method="animate",
-                              args=[None, {"frame": {"duration": 5},
-                                  "transition": {"duration": 5}}])
-                         ])]),
+                buttons=[
+                    {
+                        "args": [None, {"frame": {"duration": 5},
+                                        "fromcurrent": True, "transition": {"duration": 5,
+                                                                            "easing": "quadratic-in-out"}}],
+                        "label": "Play",
+                        "method": "animate"
+                    },
+                    {
+                        "args": [[None], {"frame": {"duration": 0},
+                                          "mode": "immediate",
+                                          "transition": {"duration": 0}}],
+                        "label": "Pause",
+                        "method": "animate"
+                    }
+                ])]),
 
         frames=[go.Frame(
             data=[
