@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import numpy as np
 from PIL import Image
+from main import app
+from dash.dependencies import Input, Output
 
 EARTH_RADIUS = 6_371_000
 
@@ -15,80 +17,94 @@ COLOR_SCALE = [[0.0, 'rgb(30, 59, 117)'],
               [0.9, 'rgb(237,214,183)'],
               [1.0, 'rgb(255, 255, 255)']]
 
-AXIS_SCALE = 2
+AXIS_SCALE = 1.5
 
 
-def plot_data(data1, data2):
-    texture = np.asarray(Image.open('earth.jpg')).T
-    trace = spheres(EARTH_RADIUS, texture)
-    fig = go.Figure(data=[go.Scatter3d(
-        x=data1[:, 0],
-        y=data1[:, 1],
-        z=data1[:, 2],
-        mode='lines',
-        name="Envisat",
-        line=dict(
-            # size=size,
-            color="orange",
-            colorscale='Viridis',
-        )
-    ), go.Scatter3d(
-        x=data2[:, 0],
-        y=data2[:, 1],
-        z=data2[:, 2],
-        mode='lines',
-        name="Globalstar",
-        line=dict(
-            # size=size,
-            color="green",
-            colorscale='Viridis'))
-        , trace],
+def plot_data_1(data1, data2):
+    texture = np.asarray(Image.open('earth-min.jpg')).T
+    N_lat = int(texture.shape[0])
+    N_lon = int(texture.shape[1])
+    trace_without_image = spheres(EARTH_RADIUS, None, "Earth", 100, 100)
+    trace_with_image = spheres(EARTH_RADIUS, texture, COLOR_SCALE, N_lat, N_lon)
+
+    fig = go.Figure(
+        data=[
+            go.Scatter3d(
+                x=data1[:, 0],
+                y=data1[:, 1],
+                z=data1[:, 2],
+                mode='lines',
+                name="Envisat",
+                line=dict(
+                    color="red",
+                    colorscale='Viridis')),
+            go.Scatter3d(
+                x=data2[:, 0],
+                y=data2[:, 1],
+                z=data2[:, 2],
+                mode='lines',
+                name="Globalstar",
+                line=dict(
+                    color="green",
+                    colorscale='Viridis')),
+            trace_with_image,
+            go.Scatter3d(
+                x=[data1[0, 0]],
+                y=[data1[0, 1]],
+                z=[data1[0, 2]],
+                mode="markers",
+                name="Envisat",
+                marker=dict(color="red", size=2),
+                showlegend=False),
+            go.Scatter3d(
+                x=[data2[0, 0]],
+                y=[data2[0, 1]],
+                z=[data2[0, 2]],
+                mode="markers",
+                name="Globalstar",
+                marker=dict(color="green", size=2),
+                showlegend=False)],
 
         layout=go.Layout(
-            title="Start Title",
+            title="Satellite Information",
             hovermode="closest",
-            updatemenus=[dict(
-                type="buttons",
-                buttons=[dict(label="Play",
-                              method="animate",
-                              args=[None, {"frame": {"duration": 5}, "transition": {"duration": 5}}])
-                         ])]),
-
-        frames=[go.Frame(
-            data=[
-                go.Scatter3d(
-                    x=[data1[k, 0]],
-                    y=[data1[k, 1]],
-                    z=[data1[k, 2]],
-                    mode="markers",
-                    marker=dict(color="red", size=2)),
-                go.Scatter3d(
-                    x=[data2[k, 0]],
-                    y=[data2[k, 1]],
-                    z=[data2[k, 2]],
-                    mode="markers",
-                    marker=dict(color="green", size=2))
-
-            ]
-            )for k in range(len(data1))])
+            uirevision=True,
+            # updatemenus=[dict(
+            #     type="buttons",
+            #     buttons=[
+            #         {
+            #             "args": [None, {"frame": {"duration": 5},
+            #                             "fromcurrent": True, "transition": {"duration": 5,
+            #                                                                 "easing": "quadratic-in-out"}}],
+            #             "label": "Play",
+            #             "method": "animate"
+            #         },
+            #         {
+            #             "args": [[None], {"frame": {"duration": 0},
+            #                               "mode": "immediate",
+            #                               "transition": {"duration": 0}}],
+            #             "label": "Pause",
+            #             "method": "animate"
+            #         }
+            #     ])]
+        ))
 
     fig.update_layout(
         paper_bgcolor="black",
+        uirevision=True,
         scene=dict(
             xaxis=dict(nticks=4, range=[-AXIS_SCALE *
-                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
+                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
             yaxis=dict(nticks=4, range=[-AXIS_SCALE *
-                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
-            zaxis=dict(nticks=4, range=[-AXIS_SCALE * EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False),
-            aspectratio=dict(x=1, y=1, z=1)),
+                       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            zaxis=dict(nticks=4, range=[-AXIS_SCALE *
+            	       EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            aspectratio = dict(x=1, y=1, z=1))
     )
-
     return fig
 
 
-def spheres(size, texture):
-    N_lat = int(texture.shape[0])
-    N_lon = int(texture.shape[1])
+def spheres(size, texture, clr, N_lat, N_lon):
     # Set up 100 points. First, do angles
     theta = np.linspace(0, 2 * np.pi, N_lat)
     phi = np.linspace(0, np.pi, N_lon)
@@ -99,7 +115,68 @@ def spheres(size, texture):
     z0 = size * np.outer(np.ones(N_lat), np.cos(phi))
 
     # Set up trace
-    trace = go.Surface(x=x0, y=y0, z=z0, surfacecolor=texture, colorscale=COLOR_SCALE)
+    trace = go.Surface(x=x0, y=y0, z=z0, surfacecolor=texture, colorscale=clr)
     trace.update(showscale=False)
 
     return trace
+
+
+@app.callback(
+    Output('example-graph-1', 'figure'),
+    [Input('graph-update', 'n_intervals')]
+)
+def make_figure(k):
+    graphdata = go.Figure(
+        data=[
+            go.Scatter3d(
+                x=orbit_data_1[max(k-50, 0):k+1, 0],
+                y=orbit_data_1[max(k-50, 0):k+1, 1],
+                z=orbit_data_1[max(k-50, 0):k+1, 2],
+                mode="lines",
+                name="Envisat",
+                line=dict(color="red", colorscale='Viridis')),
+            go.Scatter3d(
+                x=orbit_data_2[max(k-50, 0):k+1, 0],
+                y=orbit_data_2[max(k-50, 0):k+1, 1],
+                z=orbit_data_2[max(k-50, 0):k+1, 2],
+                mode="lines",
+                name="Globalstar",
+                line=dict(color="green", colorscale='Viridis')),
+            go.Scatter3d(
+                x=[0.],
+                y=[0.],
+                z=[0.],
+                mode="markers",
+                name="Earth",
+                marker=dict(color="blue", size=20)),
+            go.Scatter3d(
+                x=[orbit_data_1[k, 0]],
+                y=[orbit_data_1[k, 1]],
+                z=[orbit_data_1[k, 2]],
+                mode="markers",
+                name="Envisat",
+                marker=dict(color="red", size=2),
+                showlegend=False),
+            go.Scatter3d(
+                x=[orbit_data_2[k, 0]],
+                y=[orbit_data_2[k, 1]],
+                z=[orbit_data_2[k, 2]],
+                mode="markers",
+                name="Globalstar",
+                marker=dict(color="green", size=2),
+                showlegend=False),
+        ])
+    graphdata['layout']['uirevision'] = True
+    graphdata.update_layout(
+        paper_bgcolor="black",
+        uirevision=True,
+        scene=dict(
+            xaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            yaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            zaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            aspectratio = dict(x=1, y=1, z=1))
+    )
+    return graphdata
