@@ -40,6 +40,8 @@ def plot_data(data1, data2):
         )])
 
     fig.update_layout(
+    	template="plotly_dark",
+    	paper_bgcolor="black",
         polar = dict(
             radialaxis = dict(range=[0, 90]),
         )
@@ -97,7 +99,9 @@ def plot_data(data1, data2):
                 marker=dict(color="green")
             )])
         graphdata.update_layout(
+        	template="plotly_dark",
         	uirevision=True,
+        	paper_bgcolor="black",
             polar = dict(
                 radialaxis = dict(range=[0, 90]),
             )
@@ -109,6 +113,7 @@ def plot_data(data1, data2):
 
 if __name__ == '__main__':
     plot_data(load_pass("envisat", "graz"), load_pass("globalstar", "graz"))
+    # plot_data(load_pass("envisat", "herstmonceux"), load_pass("globalstar", "herstmonceux"))
 
 
 
