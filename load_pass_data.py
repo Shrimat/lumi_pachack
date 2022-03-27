@@ -1,17 +1,10 @@
 import numpy as np
 import json
-import glob
-from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import pandas as pd
 
 
 def load_pass(satellite, station):
-	# Location of the data on disk
-	data_path = "data/"
-
 	# path to Envisat orbital data.
-	passes_path = f'data/{satellite}_passes.json'
+	passes_path = f'Lumi Space/data/{satellite}_passes.json'
 
 	if station == "graz":
 		indx = 0
@@ -68,12 +61,3 @@ def load_pass(satellite, station):
 
 	return np.column_stack((A, E, T))
 
-if __name__ == "__main__":
-	data = load_pass("envisat", "graz")
-	A, E, T = data[:,0], data[:,1], data[:,2]
-
-	plt.plot(T, A)
-	plt.plot(T, E)
-	plt.grid()
-	plt.legend(["Altitude", "Elevation"])
-	plt.show()

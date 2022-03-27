@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import numpy as np
 from PIL import Image
+from main import app
+from dash.dependencies import Input, Output
 
 EARTH_RADIUS = 6_371_000
 
@@ -18,7 +20,7 @@ COLOR_SCALE = [[0.0, 'rgb(30, 59, 117)'],
 AXIS_SCALE = 1.5
 
 
-def plot_data(data1, data2):
+def plot_data_1(data1, data2):
     texture = np.asarray(Image.open('earth-min.jpg')).T
     N_lat = int(texture.shape[0])
     N_lon = int(texture.shape[1])
@@ -66,73 +68,30 @@ def plot_data(data1, data2):
         layout=go.Layout(
             title="Satellite Information",
             hovermode="closest",
-            updatemenus=[dict(
-                type="buttons",
-                buttons=[
-                    {
-                        "args": [None, {"frame": {"duration": 5},
-                                        "fromcurrent": True, "transition": {"duration": 5,
-                                                                            "easing": "quadratic-in-out"}}],
-                        "label": "Play",
-                        "method": "animate"
-                    },
-                    {
-                        "args": [[None], {"frame": {"duration": 0},
-                                          "mode": "immediate",
-                                          "transition": {"duration": 0}}],
-                        "label": "Pause",
-                        "method": "animate"
-                    }
-                ])]),
-
-        frames=[go.Frame(
-            data=[
-                go.Scatter3d(
-                    x=data1[max(k-100, 0):k+1, 0],
-                    y=data1[max(k-100, 0):k+1, 1],
-                    z=data1[max(k-100, 0):k+1, 2],
-                    mode="lines",
-                    name="Envisat",
-                    line=dict(color="red", colorscale='Viridis')),
-                go.Scatter3d(
-                    x=data2[max(k-100, 0):k+1, 0],
-                    y=data2[max(k-100, 0):k+1, 1],
-                    z=data2[max(k-100, 0):k+1, 2],
-                    mode="lines",
-                    name="Globalstar",
-                    line=dict(color="green", colorscale='Viridis')),
-                go.Scatter3d(
-                    x=[0.],
-                    y=[0.],
-                    z=[0.],
-                    mode="markers",
-                    name="Earth",
-                    marker=dict(color="blue", size=20)),
-                go.Scatter3d(
-                    x=[data1[k, 0]],
-                    y=[data1[k, 1]],
-                    z=[data1[k, 2]],
-                    mode="markers",
-                    name="Envisat",
-                    marker=dict(color="red", size=2),
-                    showlegend=False),
-                go.Scatter3d(
-                    x=[data2[k, 0]],
-                    y=[data2[k, 1]],
-                    z=[data2[k, 2]],
-                    mode="markers",
-                    name="Globalstar",
-                    marker=dict(color="green", size=2),
-                    showlegend=False),
-            ],
-            # layout=go.Layout(
-            #     title="Satellite Information",
-            #     hovermode="closest",
-            #     uirevision="anything"),
-            )for k in range(len(data1))])
+            uirevision=True,
+            # updatemenus=[dict(
+            #     type="buttons",
+            #     buttons=[
+            #         {
+            #             "args": [None, {"frame": {"duration": 5},
+            #                             "fromcurrent": True, "transition": {"duration": 5,
+            #                                                                 "easing": "quadratic-in-out"}}],
+            #             "label": "Play",
+            #             "method": "animate"
+            #         },
+            #         {
+            #             "args": [[None], {"frame": {"duration": 0},
+            #                               "mode": "immediate",
+            #                               "transition": {"duration": 0}}],
+            #             "label": "Pause",
+            #             "method": "animate"
+            #         }
+            #     ])]
+        ))
 
     fig.update_layout(
         paper_bgcolor="black",
+        uirevision=True,
         scene=dict(
             xaxis=dict(nticks=4, range=[-AXIS_SCALE *
                        EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
@@ -160,3 +119,64 @@ def spheres(size, texture, clr, N_lat, N_lon):
     trace.update(showscale=False)
 
     return trace
+
+
+@app.callback(
+    Output('example-graph-1', 'figure'),
+    [Input('graph-update', 'n_intervals')]
+)
+def make_figure(k):
+    graphdata = go.Figure(
+        data=[
+            go.Scatter3d(
+                x=orbit_data_1[max(k-50, 0):k+1, 0],
+                y=orbit_data_1[max(k-50, 0):k+1, 1],
+                z=orbit_data_1[max(k-50, 0):k+1, 2],
+                mode="lines",
+                name="Envisat",
+                line=dict(color="red", colorscale='Viridis')),
+            go.Scatter3d(
+                x=orbit_data_2[max(k-50, 0):k+1, 0],
+                y=orbit_data_2[max(k-50, 0):k+1, 1],
+                z=orbit_data_2[max(k-50, 0):k+1, 2],
+                mode="lines",
+                name="Globalstar",
+                line=dict(color="green", colorscale='Viridis')),
+            go.Scatter3d(
+                x=[0.],
+                y=[0.],
+                z=[0.],
+                mode="markers",
+                name="Earth",
+                marker=dict(color="blue", size=20)),
+            go.Scatter3d(
+                x=[orbit_data_1[k, 0]],
+                y=[orbit_data_1[k, 1]],
+                z=[orbit_data_1[k, 2]],
+                mode="markers",
+                name="Envisat",
+                marker=dict(color="red", size=2),
+                showlegend=False),
+            go.Scatter3d(
+                x=[orbit_data_2[k, 0]],
+                y=[orbit_data_2[k, 1]],
+                z=[orbit_data_2[k, 2]],
+                mode="markers",
+                name="Globalstar",
+                marker=dict(color="green", size=2),
+                showlegend=False),
+        ])
+    graphdata['layout']['uirevision'] = True
+    graphdata.update_layout(
+        paper_bgcolor="black",
+        uirevision=True,
+        scene=dict(
+            xaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            yaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            zaxis=dict(nticks=4, range=[-AXIS_SCALE *
+                   EARTH_RADIUS, AXIS_SCALE * EARTH_RADIUS], autorange=False, visible = False),
+            aspectratio = dict(x=1, y=1, z=1))
+    )
+    return graphdata
