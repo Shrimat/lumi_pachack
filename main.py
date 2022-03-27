@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import math
+import numpy as np
 
 from load_pass_data import load_pass
 from load_data import load
@@ -29,11 +30,29 @@ STATION_2_LAT = 50.8674
 STATION_2_LONG = 0.3361
 
 
+def spheres(size, N_lat, N_lon):
+    # Set up 100 points. First, do angles
+    theta = np.linspace(0, 2 * np.pi, N_lat)
+    phi = np.linspace(0, np.pi, N_lon)
+
+    # Set up coordinates for points on the sphere
+    x0 = size * np.outer(np.cos(theta), np.sin(phi))
+    y0 = size * np.outer(np.sin(theta), np.sin(phi))
+    z0 = size * np.outer(np.ones(N_lat), np.cos(phi))
+
+    # Set up trace
+    trace = go.Surface(x=x0, y=y0, z=z0, colorscale=[[0, 'rgb(0,0,255)'], [1, 'rgb(0,0,255)']])
+    trace.update(showscale=False)
+
+    return trace
+
+
 @app.callback(
     Output('example-graph-1', 'figure'),
     [Input('graph-update', 'n_intervals')]
 )
 def make_figure(k):
+    trace_without_image = spheres(EARTH_RADIUS, 20, 20)
     graphdata = go.Figure(
         data=[
             go.Scatter3d(
@@ -50,13 +69,14 @@ def make_figure(k):
                 mode="lines",
                 name="Globalstar",
                 line=dict(color="green", colorscale='Viridis')),
-            go.Scatter3d(
-                x=[0.],
-                y=[0.],
-                z=[0.],
-                mode="markers",
-                name="Earth",
-                marker=dict(color="blue", size=20)),
+            # go.Scatter3d(
+            #     x=[0.],
+            #     y=[0.],
+            #     z=[0.],
+            #     mode="markers",
+            #     name="Earth",
+            #     marker=dict(color="blue", size=20)),
+            trace_without_image,
             go.Scatter3d(
                 x=[EARTH_RADIUS*math.cos(STATION_1_LAT)*math.cos(STATION_1_LONG)],
                 y=[EARTH_RADIUS*math.cos(STATION_1_LAT)*math.sin(STATION_1_LONG)],
