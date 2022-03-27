@@ -15,4 +15,7 @@ def load(satellite):
 		orbit[key] = np.array(orbit[key])
 
 	pos = orbit['pos'][0::50]
+	if satellite == "globalstar":
+		extra = (orbit["time"][0] - 631154907) // 50
+		pos = np.append(np.array([[None, None, None] for i in range(extra)]), pos, axis=0)
 	return pos

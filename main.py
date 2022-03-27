@@ -183,29 +183,18 @@ def make_figure_3(k):
     return get_graph_data(satellite2_station_1, satellite2_station_2, k)
 
 
-app.layout = html.Div(children=[
-    dbc.Row(dbc.Col(html.H1(children='Lumi Satellite Orbital Data'), width=6)),
-    html.Div(children='''
-        Orbits for Envisat and Globalstar satellites
-    '''),
-    dcc.Graph(
-        id='example-graph-1',
-        figure=go.Figure()
-    ),
-    dcc.Graph(
-        id='example-graph-2',
-        figure=go.Figure()
-    ),
-    dcc.Graph(
-        id='example-graph-3',
-        figure=go.Figure()
-    ),
+app.layout = html.Div([
+    dbc.Row(dbc.Col(html.H1(children='Lumi Satellite Orbital Data'))),
+    dbc.Row(dbc.Col(dcc.Graph(id='example-graph-1', figure=go.Figure()))),
+    dbc.Row([
+        dbc.Col(dcc.Graph(id='example-graph-2', figure=go.Figure()), width=6),
+        dbc.Col(dcc.Graph(id='example-graph-3', figure=go.Figure()), width=6)
+    ]),
     dcc.Interval(
         id='graph-update',
-        interval=200,
+        interval=500,
         n_intervals=0
-    ),
-
+    )
 ])
 
 if __name__ == '__main__':
