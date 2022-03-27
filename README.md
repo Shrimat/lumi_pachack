@@ -7,7 +7,7 @@ As part of the King's College London hackathon (Pachack), we have developed an i
 To install the dependencies, type in a command line `pip3 install -r requirements.txt`. Users can then run `python3 app.py`, which will print a link in the console. Copy and paste the link into a web brower to view the animation.
 
 ## How to use
-Users can play rotate the 3d anaimation by using the tool "orbital rotation" on the top right corner. You can also zoom with the mouse wheel and acess the positions of the satellites by hovering over them with the mouse. Meanwhile, the ground view will be displyed on the right.
+Users can play rotate the 3d anaimation by using the tool "orbital rotation" on the top right corner. You can also zoom with the mouse wheel and acess the positions of the satellites by hovering over them with the mouse. Meanwhile, the ground view will be displyed on the right. Please note that data is available for some satellites and statations earlier than others.
 
 ## Credits
 Developed by Shrimat Kapoor (Imperial College London), Andres Perez Fadon (Imperial College London), Zian Huang (UCL) and Zhengze Xu (UCL).
