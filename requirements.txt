@@ -1,6 +1,6 @@
-dash==2.3.0
-dash_bootstrap_components==1.0.3
-numpy==1.21.4
-pandas==1.4.1
-Pillow==9.0.1
-plotly==5.6.0
+dash
+dash_bootstrap_components
+numpy
+pandas
+Pillow
+plotly
